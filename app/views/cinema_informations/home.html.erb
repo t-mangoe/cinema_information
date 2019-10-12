@@ -1,2 +1,5 @@
 <h1>ミント神戸の映画情報</h1>
-<p>Find me in app/views/cinema_informations/home.html.erb</p>
+
+<% @movies.each do |movie| %>
+<%= movie %>
+<% end %>
