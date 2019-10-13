@@ -1,5 +1,14 @@
 <h1>ミント神戸の映画情報</h1>
 
-<% @movies.each do |movie| %>
-<%= movie %>
+<% @infos.each do |info| %>
+<div class="cinema_info">
+    <ul>
+        <li><%= info.title %></li>
+        <ul>
+            <% info.start_times.each do |start_time| %>
+            <li><%= start_time %> 〜</li>
+            <% end %>
+        </ul>
+    </ul>
+</div>
 <% end %>
