@@ -32,4 +32,39 @@ class CinemaInformationsController < ApplicationController
     # @movies = doc.xpath("//div[@class='tTableSiteDet']")
     # p @movies
   end
+
+  def api
+    url = "https://www.jollios.net/cgi-bin/pc/site/det.cgi?tsc=21080"
+
+    # バイナリで読み込んで、文字化けを回避
+    html = open(url, "r:binary").read
+    doc = Nokogiri::HTML.parse(html.toutf8, nil, "utf-8")
+
+    movies = doc.xpath("//div[@class='tTableSiteDet']")
+    json_data = []
+    movies.each do |movie|
+      info = {}
+
+      # 映画のタイトルの取り出し
+      title = movie.xpath(".//div[@class='title']")
+      title = title.xpath(".//a")
+      info[:title] = title.text
+
+      # 映画の開始時間の取り出し
+      time_schedules = movie.xpath(".//div[contains(@id, 'sTime')]")
+      info[:schedule] = []
+      lateshow_flag = false
+      time_schedules.each do |schedule|
+        start_time = schedule.xpath(".//div[@class='start']").text
+        info[:schedule] << start_time
+        lateshow_flag = true if start_time.to_i >= 20
+      end
+
+      # レイトショーの有無を設定
+      info[:lateshow] = lateshow_flag
+
+      json_data << info
+    end
+    render :json => json_data
+  end
 end
