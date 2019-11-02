@@ -1,0 +1,2 @@
+class CinemaShowing < ApplicationRecord
+end
